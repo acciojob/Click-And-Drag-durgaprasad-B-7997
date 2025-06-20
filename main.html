@@ -36,6 +36,50 @@
 
 <script>
 //Your code goes here 
+	const container = document.getElementById('container');
+    const cubes = document.querySelectorAll('.cube');
+
+    cubes.forEach(cube => {
+      let offsetX = 0, offsetY = 0;
+      let isDragging = false;
+
+      cube.addEventListener('mousedown', (e) => {
+        isDragging = true;
+
+        const rect = cube.getBoundingClientRect();
+        offsetX = e.clientX - rect.left;
+        offsetY = e.clientY - rect.top;
+
+        document.addEventListener('mousemove', onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      });
+
+      function onMouseMove(e) {
+        if (!isDragging) return;
+
+        const containerRect = container.getBoundingClientRect();
+        const cubeRect = cube.getBoundingClientRect();
+
+        let newLeft = e.clientX - containerRect.left - offsetX;
+        let newTop = e.clientY - containerRect.top - offsetY;
+
+        // Constrain within container
+        const maxLeft = container.clientWidth - cube.offsetWidth;
+        const maxTop = container.clientHeight - cube.offsetHeight;
+
+        newLeft = Math.max(0, Math.min(newLeft, maxLeft));
+        newTop = Math.max(0, Math.min(newTop, maxTop));
+
+        cube.style.left = `${newLeft}px`;
+        cube.style.top = `${newTop}px`;
+      }
+
+      function onMouseUp() {
+        isDragging = false;
+        document.removeEventListener('mousemove', onMouseMove);
+        document.removeEventListener('mouseup', onMouseUp);
+      }
+    });
 </script>
 
   </body>
